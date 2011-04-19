@@ -1,1 +1,4 @@
-Hej!
+We are trying to implement a game similar to Achtung die Kurve with HTML canvas.
+We will try to add support for online multiplayer using Websockets.
+
+The game is in a development phase and as of now only two players are available steering with a,s and left,right.

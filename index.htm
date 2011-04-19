@@ -5,6 +5,10 @@
 	var FPS = 30;
 	var RENDERTIME = 1000 / FPS; // Milliseconds
 	var RADIUS = Math.PI / 50;
+	var SPEED = 2; // px per RENDERTIME
+	var HOLECHANCE = 0.009;
+	var MINHOLE = 5;
+	var MAXHOLE = 7;
 	var worms = [];
 	var canvasid;
 	var canvas1, canvas2, ctx1, ctx2, ctx, activectx;
@@ -76,8 +80,12 @@
 	
 				worm.d += worm.turning * RADIUS;
 			
-				var newx = positions.last()['x'] + Math.cos(worm.d) * 2;
-				var newy = positions.last()['y'] + Math.sin(worm.d) * 2;
+				if(Math.random() < HOLECHANCE) {
+					worm.hole = Math.floor(Math.random() * (MAXHOLE - MINHOLE + 1) + MINHOLE);
+				}
+
+				var newx = positions.last()['x'] + Math.cos(worm.d) * SPEED;
+				var newy = positions.last()['y'] + Math.sin(worm.d) * SPEED;
 				
 				if(newx < 0 || newy < 0 || newx > ctx.width || newy > ctx.height) {
 					worm.alive = false;
@@ -92,7 +100,13 @@
 						}
 				}
 				
-				worm.positions.push({'x': newx, 'y': newy});
+				if(worm.hole > 0) {
+					worm.positions.push({'x': newx, 'y': newy, 'paint': false});
+					worm.hole--;
+				}
+				else {
+					worm.positions.push({'x': newx, 'y': newy, 'paint': true});
+				}
 			}
 
 			
@@ -103,7 +117,12 @@
 			ctx.moveTo(x, y);
 
 			worm.positions.forEach(function(coordinates) {
-				ctx.lineTo(coordinates['x'], coordinates['y']);
+				if(coordinates['paint'] == true) {
+					ctx.lineTo(coordinates['x'], coordinates['y']);
+				}
+				else {
+					ctx.moveTo(coordinates['x'], coordinates['y']);
+				}
 			});
 
 			ctx.strokeStyle = worm.color;

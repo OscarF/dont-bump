@@ -19,10 +19,10 @@ Game.prototype.start = function() {
 	this.worms.push(new Worm(this.width, this.height));
 	this.worms.push(new Worm(this.width, this.height));
 	
-	window.addEventListener('onkeydown', this.keydown, false);
-	window.addEventListener('onkeyup', this.keyup, false);
-	
 	var self = this;
+	
+	window.addEventListener('keydown', function(e) {self.keydown(e);}, false);
+	window.addEventListener('keyup', function(e) {self.keyup(e);}, false, false);
 	
 	this.interval = setInterval(function() {self.render();}, RENDERTIME);
 };
